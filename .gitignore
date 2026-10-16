@@ -1,0 +1,14 @@
+# Data Lake (dados grandes, não versionados)
+datalake/bronze/
+datalake/silver/
+datalake/gold/
+*.duckdb
+*.duckdb.wal
+
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
