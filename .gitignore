@@ -14,5 +14,4 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Logs
-*.log
-logs/
+ingest_bronze.log
