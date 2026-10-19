@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Setup DuckDB: load Gold Parquets as native tables and generate optimizer statistics.
-
-This script creates the DuckDB database that will be used for all JOIN experiments.
-"""
+"""Setup DuckDB: load all 7 Gold Parquets as native tables and generate optimizer statistics."""
 
 import sys
 from pathlib import Path
@@ -16,136 +12,101 @@ import duckdb
 GOLD = PROJECT_ROOT / "datalake" / "gold"
 DUCKDB_PATH = PROJECT_ROOT / "datalake" / "nlst.duckdb"
 
+TABLES = {
+    "pathology":              GOLD / "pathology.parquet",
+    "masterfile":             GOLD / "masterfile.parquet",
+    "lung_cancer":            GOLD / "lung_cancer.parquet",
+    "participant":            GOLD / "participant.parquet",
+    "cause_of_death":         GOLD / "cause_of_death.parquet",
+    "medical_complications":  GOLD / "medical_complications.parquet",
+    "treatment":              GOLD / "treatment.parquet",
+}
+
 
 def main() -> None:
     print("=" * 60)
-    print("SETUP DUCKDB — Load Gold Tables")
+    print("SETUP DUCKDB — Load All Gold Tables")
     print("=" * 60)
 
-    # Se já existe, remove para recriar do zero
+    # Recreate from scratch
     if DUCKDB_PATH.exists():
         DUCKDB_PATH.unlink()
-        print(f"\nRemoved existing database: {DUCKDB_PATH}")
+        print(f"\nRemoved existing database")
 
-    # Conectar (cria o arquivo)
     con = duckdb.connect(str(DUCKDB_PATH))
     print(f"Connected to: {DUCKDB_PATH}")
 
-    # ── 1. Criar tabelas a partir dos Parquets Gold ──────────
-    print("\n── 1. Criando tabelas ──")
+    # ── 1. Create tables ─────────────────────────────────────
+    print("\n── 1. Creating tables ──")
+    for name, path in TABLES.items():
+        con.sql(f"CREATE TABLE {name} AS SELECT * FROM read_parquet('{path}')")
+        count = con.sql(f"SELECT COUNT(*) FROM {name}").fetchone()[0]
+        cols = len(con.sql(f"DESCRIBE {name}").fetchall())
+        print(f"  {name:30s} {count:>10,} rows × {cols:>3} cols ✓")
 
-    tables = {
-        "pathology": GOLD / "pathology.parquet",
-        "masterfile": GOLD / "masterfile.parquet",
-        "lung_cancer": GOLD / "lung_cancer.parquet",
-    }
+    # ── 2. Generate statistics ────────────────────────────────
+    print("\n── 2. ANALYZE ──")
+    for name in TABLES:
+        con.sql(f"ANALYZE {name}")
+        print(f"  ANALYZE {name} ✓")
 
-    for table_name, parquet_path in tables.items():
-        con.sql(f"""
-            CREATE TABLE {table_name} AS 
-            SELECT * FROM read_parquet('{parquet_path}')
-        """)
-
-        count = con.sql(f"SELECT COUNT(*) AS n FROM {table_name}").fetchone()[0]
-        cols = len(con.sql(f"DESCRIBE {table_name}").fetchall())
-        print(f"  {table_name}: {count:,} rows × {cols} cols ✓")
-
-    # ── 2. Gerar estatísticas para o otimizador ──────────────
-    print("\n── 2. Gerando estatísticas (ANALYZE) ──")
-
-    for table_name in tables:
-        con.sql(f"ANALYZE {table_name}")
-        print(f"  ANALYZE {table_name} ✓")
-
-    # ── 3. Verificar o catálogo ──────────────────────────────
-    print("\n── 3. Catálogo de tabelas ──")
-
-    result = con.sql("SHOW TABLES").fetchall()
-    for row in result:
+    # ── 3. Catalog ────────────────────────────────────────────
+    print("\n── 3. Tables in catalog ──")
+    for row in con.sql("SHOW TABLES").fetchall():
         print(f"  - {row[0]}")
 
-    # ── 4. Schemas das tabelas ───────────────────────────────
-    print("\n── 4. Schemas ──")
+    # ── 4. Validate JOINs ────────────────────────────────────
+    print("\n── 4. JOIN validation ──")
 
-    for table_name in tables:
-        print(f"\n  {table_name}:")
-        schema = con.sql(f"DESCRIBE {table_name}").fetchall()
-        for col_name, col_type, *_ in schema:
-            print(f"    {col_name}: {col_type}")
+    joins = [
+        ("pathology ⟕ masterfile",
+         "SELECT COUNT(*) FROM pathology p JOIN masterfile m ON p.slide_id = m.slide_id"),
+        ("masterfile ⟕ lung_cancer",
+         "SELECT COUNT(*) FROM masterfile m JOIN lung_cancer lc ON m.patient_id = lc.patient_id"),
+        ("masterfile ⟕ participant",
+         "SELECT COUNT(*) FROM masterfile m JOIN participant pt ON m.patient_id = pt.patient_id"),
+        ("participant ⟕ treatment",
+         "SELECT COUNT(*) FROM participant pt JOIN treatment t ON pt.patient_id = t.patient_id"),
+        ("participant ⟕ cause_of_death",
+         "SELECT COUNT(*) FROM participant pt JOIN cause_of_death cod ON pt.patient_id = cod.patient_id"),
+        ("participant ⟕ medical_complications",
+         "SELECT COUNT(*) FROM participant pt JOIN medical_complications mc ON pt.patient_id = mc.patient_id"),
+        ("3-way: path ⟕ mf ⟕ lc",
+         "SELECT COUNT(*) FROM pathology p JOIN masterfile m ON p.slide_id = m.slide_id JOIN lung_cancer lc ON m.patient_id = lc.patient_id"),
+        ("3-way: mf ⟕ participant ⟕ treatment",
+         "SELECT COUNT(*) FROM masterfile m JOIN participant pt ON m.patient_id = pt.patient_id JOIN treatment t ON pt.patient_id = t.patient_id"),
+        ("4-way: path ⟕ mf ⟕ lc ⟕ treatment",
+         "SELECT COUNT(*) FROM pathology p JOIN masterfile m ON p.slide_id = m.slide_id JOIN lung_cancer lc ON m.patient_id = lc.patient_id JOIN treatment t ON m.patient_id = t.patient_id"),
+    ]
 
-    # ── 5. Preview dos dados ─────────────────────────────────
-    print("\n── 5. Preview ──")
+    for label, sql in joins:
+        try:
+            count = con.sql(sql).fetchone()[0]
+            print(f"  {label:45s} → {count:>10,} rows")
+        except Exception as e:
+            print(f"  {label:45s} → ERROR: {e}")
 
-    for table_name in tables:
-        print(f"\n  {table_name} (primeiras 3 linhas):")
-        con.sql(f"SELECT * FROM {table_name} LIMIT 3").show()
-
-    # ── 6. Validação rápida dos JOINs ────────────────────────
-    print("\n── 6. Validação dos JOINs ──")
-
-    # Q1: pathology ↔ masterfile
-    q1 = con.sql("""
-        SELECT COUNT(*) AS n
-        FROM pathology p
-        JOIN masterfile m ON p.slide_id = m.slide_id
-    """).fetchone()[0]
-    print(f"  pathology ⟕ masterfile:          {q1:,} rows")
-
-    # Q2: masterfile ↔ lung_cancer
-    q2 = con.sql("""
-        SELECT COUNT(*) AS n
-        FROM masterfile m
-        JOIN lung_cancer lc ON m.patient_id = lc.patient_id
-    """).fetchone()[0]
-    print(f"  masterfile ⟕ lung_cancer:        {q2:,} rows")
-
-    # Q3: 3-way join
-    q3 = con.sql("""
-        SELECT COUNT(*) AS n
-        FROM pathology p
-        JOIN masterfile m ON p.slide_id = m.slide_id
-        JOIN lung_cancer lc ON m.patient_id = lc.patient_id
-    """).fetchone()[0]
-    print(f"  pathology ⟕ masterfile ⟕ lc:     {q3:,} rows")
-
-    # ── 7. Testar EXPLAIN ────────────────────────────────────
-    print("\n── 7. Teste EXPLAIN (plano estimado) ──")
-
+    # ── 5. EXPLAIN ANALYZE test ──────────────────────────────
+    print("\n── 5. EXPLAIN ANALYZE (4-way join) ──")
     plan = con.sql("""
-        EXPLAIN
-        SELECT p.slide_id, p.cancer_type, m.patient_id, lc.modality
+        EXPLAIN ANALYZE
+        SELECT p.slide_id, p.cancer_type, m.patient_id, lc.modality, t.treatment_category
         FROM pathology p
         JOIN masterfile m ON p.slide_id = m.slide_id
         JOIN lung_cancer lc ON m.patient_id = lc.patient_id
+        JOIN treatment t ON m.patient_id = t.patient_id
     """).fetchall()
-
     for row in plan:
         print(row[1])
 
-    # ── 8. Testar EXPLAIN ANALYZE ────────────────────────────
-    print("\n── 8. Teste EXPLAIN ANALYZE (plano real) ──")
-
-    plan_analyze = con.sql("""
-        EXPLAIN ANALYZE
-        SELECT p.slide_id, p.cancer_type, m.patient_id, lc.modality
-        FROM pathology p
-        JOIN masterfile m ON p.slide_id = m.slide_id
-        JOIN lung_cancer lc ON m.patient_id = lc.patient_id
-    """).fetchall()
-
-    for row in plan_analyze:
-        print(row[1])
-
-    # ── Resumo ───────────────────────────────────────────────
+    # ── Summary ──────────────────────────────────────────────
     db_size = DUCKDB_PATH.stat().st_size / (1024**2)
-
     print("\n" + "=" * 60)
-    print("RESUMO")
+    print("SUMMARY")
     print("=" * 60)
     print(f"  Database: {DUCKDB_PATH}")
     print(f"  Size: {db_size:.1f} MB")
-    print(f"  Tables: {len(tables)}")
-    print(f"  JOINs validados: todos funcionando ✓")
+    print(f"  Tables: {len(TABLES)}")
     print("\n✓ Done!")
 
     con.close()
