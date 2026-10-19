@@ -1,0 +1,47 @@
+============================================================
+BUILD SILVER — Cause of Death (CSV + SAS → Parquet)
+============================================================
+
+── 1. Reading CSV ──
+  Shape: 15224 rows × 6 cols
+
+── 2. Parsing SAS formats ──
+  Found mappings for 2 variables
+    codtype: 5 values
+    dcfline: 2 values
+
+── 3. Applying SAS formats ──
+  Applied SAS formats to 2 columns
+  New shape: 15224 rows × 8 cols
+
+── 4. Saving to Silver ──
+  Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/silver/cause_of_death.parquet
+  Rows: 15224, Columns: 8
+
+── 5. Validation ──
+shape: (5, 8)
+┌────────────────┬────────┬──────┬───────────┬─────────┬─────────┬────────────────┬────────────────┐
+│ dataset_versio ┆ pid    ┆ cod  ┆ cod_count ┆ codtype ┆ dcfline ┆ codtype_label  ┆ dcfline_label  │
+│ n              ┆ ---    ┆ ---  ┆ ---       ┆ ---     ┆ ---     ┆ ---            ┆ ---            │
+│ ---            ┆ i64    ┆ str  ┆ i64       ┆ i64     ┆ str     ┆ str            ┆ str            │
+│ str            ┆        ┆      ┆           ┆         ┆         ┆                ┆                │
+╞════════════════╪════════╪══════╪═══════════╪═════════╪═════════╪════════════════╪════════════════╡
+│ 2011.02.03/04. ┆ 100023 ┆ C900 ┆ 6         ┆ 2       ┆ UN      ┆ (2) Death      ┆ (UN)           │
+│ 07.22          ┆        ┆      ┆           ┆         ┆         ┆ certificate    ┆ Underlying     │
+│                ┆        ┆      ┆           ┆         ┆         ┆ underlyi…      ┆ cause of       │
+│                ┆        ┆      ┆           ┆         ┆         ┆                ┆ death…         │
+│ 2011.02.03/04. ┆ 100023 ┆ E835 ┆ 1         ┆ 3       ┆ A1      ┆ (3) Immediate  ┆ null           │
+│ 07.22          ┆        ┆      ┆           ┆         ┆         ┆ cause of death ┆                │
+│                ┆        ┆      ┆           ┆         ┆         ┆ f…             ┆                │
+│ 2011.02.03/04. ┆ 100023 ┆ N179 ┆ 2         ┆ 4       ┆ B1      ┆ (4) Antecedent ┆ null           │
+│ 07.22          ┆        ┆      ┆           ┆         ┆         ┆ cause of death ┆                │
+│                ┆        ┆      ┆           ┆         ┆         ┆ …              ┆                │
+│ 2011.02.03/04. ┆ 100023 ┆ C900 ┆ 3         ┆ 4       ┆ C1      ┆ (4) Antecedent ┆ null           │
+│ 07.22          ┆        ┆      ┆           ┆         ┆         ┆ cause of death ┆                │
+│                ┆        ┆      ┆           ┆         ┆         ┆ …              ┆                │
+│ 2011.02.03/04. ┆ 100023 ┆ I251 ┆ 4         ┆ 5       ┆ O1      ┆ (5) Other      ┆ null           │
+│ 07.22          ┆        ┆      ┆           ┆         ┆         ┆ significant    ┆                │
+│                ┆        ┆      ┆           ┆         ┆         ┆ conditio…      ┆                │
+└────────────────┴────────┴──────┴───────────┴─────────┴─────────┴────────────────┴────────────────┘
+
+✓ Done!

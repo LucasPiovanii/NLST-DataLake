@@ -1,0 +1,46 @@
+============================================================
+BUILD SILVER — Participant (CSV + SAS Formats → Parquet)
+============================================================
+
+── 1. Reading CSV ──
+  Source: /nfs/home/lucas_piovani/NLST-DataLake/datalake/bronze/dictionaries/participant_dictionary/participant_d040722.csv
+  Shape: 53452 rows × 356 cols
+
+── 2. Parsing SAS formats ──
+  Source: /nfs/home/lucas_piovani/NLST-DataLake/datalake/bronze/dictionaries/participant_dictionary/participant.sas_formats.d040722.sas
+  Found mappings for 291 variables
+    elig: 2 values — e.g. [('0', '(0) Ineligible Participant Randomized'), ('2', '(2) Eligible Participant')]
+    ineligible: 15 values — e.g. [('.N', '(.N) Not ineligible'), ('1', '(1) Age <55 or >74 yrs'), ('2', '(2) Non-smoker or quit > 15 years')]
+    rndgroup: 2 values — e.g. [('1', '(1) Spiral CT'), ('2', '(2) X-ray')]
+    study: 3 values — e.g. [('1', '(1) LSS'), ('2', '(2) ACRIN biomarkers'), ('3', '(3) ACRIN no biomarkers')]
+    educat: 11 values — e.g. [('1', '(1) 8th grade or less'), ('2', '(2) 9th-11th grade'), ('3', '(3) High school graduate/GED')]
+
+── 3. Applying SAS formats ──
+  Applied SAS formats to 269 columns
+  New shape: 53452 rows × 625 cols
+
+── 4. Saving to Silver ──
+  Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/silver/participant.parquet
+  Rows: 53452
+  Columns: 625
+
+── 5. Validation ──
+  Read back: 53452 rows × 625 cols
+  Label columns created: 269
+  Examples: ['elig_label', 'ineligible_label', 'rndgroup_label', 'study_label', 'educat_label', 'ethnic_label', 'gender_label', 'height_label', 'marital_label', 'race_label']
+
+  Sample data:
+shape: (5, 7)
+┌────────┬────────┬──────────────┬──────┬────────────┬─────────┬───────────────┐
+│ pid    ┆ gender ┆ gender_label ┆ race ┆ race_label ┆ cigsmok ┆ cigsmok_label │
+│ ---    ┆ ---    ┆ ---          ┆ ---  ┆ ---        ┆ ---     ┆ ---           │
+│ i64    ┆ i64    ┆ str          ┆ i64  ┆ str        ┆ i64     ┆ str           │
+╞════════╪════════╪══════════════╪══════╪════════════╪═════════╪═══════════════╡
+│ 100001 ┆ 1      ┆ (1) Male     ┆ 1    ┆ (1) White  ┆ 1       ┆ (1) Current   │
+│ 100002 ┆ 1      ┆ (1) Male     ┆ 1    ┆ (1) White  ┆ 1       ┆ (1) Current   │
+│ 100003 ┆ 1      ┆ (1) Male     ┆ 1    ┆ (1) White  ┆ 1       ┆ (1) Current   │
+│ 100004 ┆ 1      ┆ (1) Male     ┆ 1    ┆ (1) White  ┆ 0       ┆ (0) Former    │
+│ 100005 ┆ 1      ┆ (1) Male     ┆ 1    ┆ (1) White  ┆ 0       ┆ (0) Former    │
+└────────┴────────┴──────────────┴──────┴────────────┴─────────┴───────────────┘
+
+✓ Done!

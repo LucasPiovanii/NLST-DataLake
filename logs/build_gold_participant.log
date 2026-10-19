@@ -1,0 +1,27 @@
+============================================================
+BUILD GOLD — Participant
+============================================================
+
+Silver: 53452 rows × 625 cols
+
+Gold: 53452 rows × 355 cols
+Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/gold/participant.parquet
+
+  Columns with labels applied: 269
+  Columns kept as-is (numeric/no mapping): 85
+
+  Sample:
+shape: (5, 7)
+┌────────────┬──────────┬───────────┬─────┬─────────────┬─────────────┬─────────┐
+│ patient_id ┆ gender   ┆ race      ┆ age ┆ cigsmok     ┆ lung_cancer ┆ de_type │
+│ ---        ┆ ---      ┆ ---       ┆ --- ┆ ---         ┆ ---         ┆ ---     │
+│ str        ┆ str      ┆ str       ┆ i64 ┆ str         ┆ str         ┆ str     │
+╞════════════╪══════════╪═══════════╪═════╪═════════════╪═════════════╪═════════╡
+│ 100001     ┆ (1) Male ┆ (1) White ┆ 70  ┆ (1) Current ┆ (0) No      ┆ null    │
+│ 100002     ┆ (1) Male ┆ (1) White ┆ 66  ┆ (1) Current ┆ (0) No      ┆ null    │
+│ 100003     ┆ (1) Male ┆ (1) White ┆ 64  ┆ (1) Current ┆ (0) No      ┆ null    │
+│ 100004     ┆ (1) Male ┆ (1) White ┆ 60  ┆ (0) Former  ┆ (0) No      ┆ null    │
+│ 100005     ┆ (1) Male ┆ (1) White ┆ 64  ┆ (0) Former  ┆ (0) No      ┆ null    │
+└────────────┴──────────┴───────────┴─────┴─────────────┴─────────────┴─────────┘
+
+✓ Done!

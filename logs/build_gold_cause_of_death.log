@@ -1,0 +1,28 @@
+============================================================
+BUILD GOLD — Cause of Death
+============================================================
+
+Silver: 15224 rows × 8 cols
+Gold: 15224 rows × 6 cols
+Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/gold/cause_of_death.parquet
+
+Sample:
+shape: (5, 6)
+┌────────────┬────────────┬───────────┬─────────────────────────┬─────────┬────────────────────────┐
+│ patient_id ┆ icd10_code ┆ cod_count ┆ cod_type                ┆ dcfline ┆ dcfline_description    │
+│ ---        ┆ ---        ┆ ---       ┆ ---                     ┆ ---     ┆ ---                    │
+│ str        ┆ str        ┆ i64       ┆ str                     ┆ str     ┆ str                    │
+╞════════════╪════════════╪═══════════╪═════════════════════════╪═════════╪════════════════════════╡
+│ 100023     ┆ C900       ┆ 6         ┆ (2) Death certificate   ┆ UN      ┆ (UN) Underlying cause  │
+│            ┆            ┆           ┆ underlyi…               ┆         ┆ of death…              │
+│ 100023     ┆ E835       ┆ 1         ┆ (3) Immediate cause of  ┆ A1      ┆ null                   │
+│            ┆            ┆           ┆ death f…                ┆         ┆                        │
+│ 100023     ┆ N179       ┆ 2         ┆ (4) Antecedent cause of ┆ B1      ┆ null                   │
+│            ┆            ┆           ┆ death …                 ┆         ┆                        │
+│ 100023     ┆ C900       ┆ 3         ┆ (4) Antecedent cause of ┆ C1      ┆ null                   │
+│            ┆            ┆           ┆ death …                 ┆         ┆                        │
+│ 100023     ┆ I251       ┆ 4         ┆ (5) Other significant   ┆ O1      ┆ null                   │
+│            ┆            ┆           ┆ conditio…               ┆         ┆                        │
+└────────────┴────────────┴───────────┴─────────────────────────┴─────────┴────────────────────────┘
+
+✓ Done!
