@@ -1,0 +1,45 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│          modality         │
+│                           │
+│      ~3,450,460 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│      ~3,450,460 rows      │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│      STREAMING_SAMPLE     ││          SEQ_SCAN         │
+│    ────────────────────   ││    ────────────────────   │
+│       Sample Method:      ││           Table:          │
+│   Bernoulli: 50.000000%   ││    nlst.main.masterfile   │
+│                           ││                           │
+│                           ││   Type: Sequential Scan   │
+│                           ││                           │
+│                           ││        Projections:       │
+│                           ││         patient_id        │
+│                           ││                           │
+│                           ││        ~1,252 rows        │
+└─────────────┬─────────────┘└───────────────────────────┘
+┌─────────────┴─────────────┐
+│          SEQ_SCAN         │
+│    ────────────────────   │
+│           Table:          │
+│   nlst.main.lung_cancer   │
+│                           │
+│   Type: Sequential Scan   │
+│                           │
+│        Projections:       │
+│         patient_id        │
+│          modality         │
+│                           │
+│          ~0 rows          │
+└───────────────────────────┘

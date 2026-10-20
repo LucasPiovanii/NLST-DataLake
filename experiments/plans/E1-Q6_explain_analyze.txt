@@ -1,0 +1,57 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT pt.patient_id, pt.age, pt.gender, t.treatment_category             FROM participant pt             JOIN treatment t ON pt.patient_id = t.patient_id
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0132s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│         4,643 rows        │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         TABLE_SCAN        │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│   nlst.main.participant   ││    nlst.main.treatment    │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         patient_id        ││         patient_id        │
+│            age            ││     treatment_category    │
+│           gender          ││                           │
+│                           ││                           │
+│      Dynamic Filters:     ││                           │
+│   optional: patient_id>=  ││                           │
+│   '100012' AND optional:  ││           0.00s           │
+│    patient_id<='218886'   ││                           │
+│                           ││                           │
+│                           ││                           │
+│                           ││                           │
+│        53,433 rows        ││         4,643 rows        │
+│           0.01s           ││          (0.00s)          │
+└───────────────────────────┘└───────────────────────────┘

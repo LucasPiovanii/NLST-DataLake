@@ -1,0 +1,81 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│__internal_decompress_strin│
+│           g(#0)           │
+│             #1            │
+│             #2            │
+│             #3            │
+│                           │
+│          ~0 rows          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│          Groups:          │
+│             #0            │
+│             #1            │
+│                           │
+│        Aggregates:        │
+│        count_star()       │
+│     count(DISTINCT #2)    │
+│                           │
+│          ~0 rows          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│        cancer_type        │
+│         timepoint         │
+│                           │
+│       ~903,335 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│             #0            │
+│__internal_compress_string_│
+│        ubigint(#1)        │
+│             #2            │
+│                           │
+│       ~903,335 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│       ~903,335 rows       │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│   nlst.main.lung_cancer   ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││    slide_id = slide_id    │
+│                           ││                           ├──────────────┐
+│        Projections:       ││                           │              │
+│         patient_id        ││                           │              │
+│         timepoint         ││                           │              │
+│                           ││                           │              │
+│       ~666,943 rows       ││        ~1,480 rows        │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │          SEQ_SCAN         ││          SEQ_SCAN         │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││           Table:          │
+                             │    nlst.main.masterfile   ││    nlst.main.pathology    │
+                             │                           ││                           │
+                             │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                             │                           ││                           │
+                             │        Projections:       ││        Projections:       │
+                             │          slide_id         ││          slide_id         │
+                             │         patient_id        ││        cancer_type        │
+                             │                           ││                           │
+                             │        ~1,252 rows        ││        ~1,225 rows        │
+                             └───────────────────────────┘└───────────────────────────┘

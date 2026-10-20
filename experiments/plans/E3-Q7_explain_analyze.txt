@@ -1,0 +1,78 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT pt.patient_id, pt.age, cod.icd10_code, t.treatment_category             FROM participant pt             JOIN cause_of_death cod ON pt.patient_id = cod.patient_id             JOIN treatment t ON pt.patient_id = t.patient_id
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0139s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│         7,795 rows        │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│   nlst.main.participant   ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││  patient_id = patient_id  │
+│                           ││                           │
+│        Projections:       ││                           │
+│         patient_id        ││                           │
+│            age            ││                           │
+│                           ││           0.01s           ├──────────────┐
+│      Dynamic Filters:     ││                           │              │
+│   optional: patient_id>=  ││                           │              │
+│   '100055' AND optional:  ││                           │              │
+│    patient_id<='218873'   ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│        53,377 rows        ││         7,795 rows        │              │
+│           0.00s           ││          (0.01s)          │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │         TABLE_SCAN        ││         TABLE_SCAN        │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││           Table:          │
+                             │  nlst.main.cause_of_death ││    nlst.main.treatment    │
+                             │                           ││                           │
+                             │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                             │                           ││                           │
+                             │        Projections:       ││        Projections:       │
+                             │         patient_id        ││         patient_id        │
+                             │         icd10_code        ││     treatment_category    │
+                             │                           ││                           │
+                             │      Dynamic Filters:     ││                           │
+                             │   optional: patient_id>=  ││                           │
+                             │   '100012' AND optional:  ││                           │
+                             │    patient_id<='218886'   ││           0.00s           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │        15,224 rows        ││         4,643 rows        │
+                             │           0.00s           ││          (0.00s)          │
+                             └───────────────────────────┘└───────────────────────────┘

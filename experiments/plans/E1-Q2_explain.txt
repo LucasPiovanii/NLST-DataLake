@@ -1,0 +1,37 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          slide_id         │
+│        cancer_type        │
+│         patient_id        │
+│                           │
+│         ~296 rows         │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│    slide_id = slide_id    │              │
+│                           │              │
+│         ~296 rows         │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││          SEQ_SCAN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│    nlst.main.masterfile   ││    nlst.main.pathology    │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│          slide_id         ││          slide_id         │
+│         patient_id        ││        cancer_type        │
+│                           ││                           │
+│                           ││          Filters:         │
+│                           ││      cancer_type='2-1     │
+│                           ││      -Adenocarcinoma'     │
+│                           ││                           │
+│        ~1,252 rows        ││         ~245 rows         │
+└───────────────────────────┘└───────────────────────────┘

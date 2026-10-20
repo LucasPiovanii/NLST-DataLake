@@ -1,0 +1,59 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT pt.patient_id, pt.age, pt.gender, t.treatment_category             FROM participant pt             JOIN treatment t ON pt.patient_id = t.patient_id             WHERE t.treatment_category = '(2) Surgical'
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0094s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│         2,830 rows        │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         TABLE_SCAN        │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│   nlst.main.participant   ││    nlst.main.treatment    │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         patient_id        ││         patient_id        │
+│            age            ││     treatment_category    │
+│           gender          ││                           │
+│                           ││          Filters:         │
+│      Dynamic Filters:     ││  treatment_category='(2)  │
+│   optional: patient_id>=  ││          Surgical'        │
+│   '100012' AND optional:  ││                           │
+│  patient_id<='218886' AND ││                           │
+│   optional: patient_id IN ││                           │
+│       BF(patient_id)      ││                           │
+│                           ││           0.00s           │
+│                           ││                           │
+│                           ││                           │
+│         1,101 rows        ││         2,830 rows        │
+│           0.00s           ││          (0.00s)          │
+└───────────────────────────┘└───────────────────────────┘

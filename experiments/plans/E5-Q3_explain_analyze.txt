@@ -1,0 +1,143 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT m.patient_id, p.cancer_type, lc_agg.n_dicoms, lc_agg.n_timepoints             FROM pathology p             JOIN masterfile m ON p.slide_id = m.slide_id             JOIN (                 SELECT patient_id, COUNT(*) AS n_dicoms, COUNT(DISTINCT timepoint) AS n_timepoints                 FROM lung_cancer                 GROUP BY patient_id             ) lc_agg ON m.patient_id = lc_agg.patient_id
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0385s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│        cancer_type        │
+│          n_dicoms         │
+│        n_timepoints       │
+│                           │
+│                           │
+│                           │
+│          803 rows         │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│    slide_id = slide_id    ├───────────────────────────────────────────┐
+│                           │                                           │
+│                           │                                           │
+│                           │                                           │
+│          803 rows         │                                           │
+│           0.00s           │                                           │
+└─────────────┬─────────────┘                                           │
+┌─────────────┴─────────────┐                             ┌─────────────┴─────────────┐
+│         HASH_JOIN         │                             │         TABLE_SCAN        │
+│    ────────────────────   │                             │    ────────────────────   │
+│      Join Type: INNER     │                             │           Table:          │
+│                           │                             │    nlst.main.pathology    │
+│        Conditions:        │                             │                           │
+│  patient_id = patient_id  │                             │   Type: Sequential Scan   │
+│                           │                             │                           │
+│                           ├──────────────┐              │        Projections:       │
+│                           │              │              │          slide_id         │
+│                           │              │              │        cancer_type        │
+│           0.01s           │              │              │                           │
+│                           │              │              │                           │
+│                           │              │              │                           │
+│          814 rows         │              │              │         1,225 rows        │
+│          (0.01s)          │              │              │           0.00s           │
+└─────────────┬─────────────┘              │              └───────────────────────────┘
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         PROJECTION        │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││__internal_decompress_strin│
+│    nlst.main.masterfile   ││           g(#0)           │
+│                           ││             #1            │
+│   Type: Sequential Scan   ││             #2            │
+│                           ││                           │
+│        Projections:       ││                           │
+│          slide_id         ││                           │
+│         patient_id        ││                           │
+│                           ││           0.00s           │
+│      Dynamic Filters:     ││                           │
+│ optional: slide_id>='10015││                           │
+│ ' AND optional: slide_id<=││                           │
+│       'NLSI0000526'       ││                           │
+│   optional: patient_id>=  ││                           │
+│   '100012' AND optional:  ││                           │
+│    patient_id<='218705'   ││                           │
+│                           ││                           │
+│                           ││                           │
+│                           ││                           │
+│         1,252 rows        ││         1,045 rows        │
+│           0.00s           ││          (0.00s)          │
+└───────────────────────────┘└─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │       HASH_GROUP_BY       │
+                             │    ────────────────────   │
+                             │         Groups: #0        │
+                             │                           │
+                             │        Aggregates:        │
+                             │        count_star()       │
+                             │     count(DISTINCT #1)    │
+                             │                           │
+                             │                           │
+                             │                           │
+                             │         1,045 rows        │
+                             │           0.10s           │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │         PROJECTION        │
+                             │    ────────────────────   │
+                             │         patient_id        │
+                             │         timepoint         │
+                             │                           │
+                             │                           │
+                             │                           │
+                             │        666,943 rows       │
+                             │           0.00s           │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │         PROJECTION        │
+                             │    ────────────────────   │
+                             │__internal_compress_string_│
+                             │        ubigint(#0)        │
+                             │             #1            │
+                             │                           │
+                             │                           │
+                             │                           │
+                             │        666,943 rows       │
+                             │           0.00s           │
+                             └─────────────┬─────────────┘
+                             ┌─────────────┴─────────────┐
+                             │         TABLE_SCAN        │
+                             │    ────────────────────   │
+                             │           Table:          │
+                             │   nlst.main.lung_cancer   │
+                             │                           │
+                             │   Type: Sequential Scan   │
+                             │                           │
+                             │        Projections:       │
+                             │         patient_id        │
+                             │         timepoint         │
+                             │                           │
+                             │                           │
+                             │                           │
+                             │        666,943 rows       │
+                             │           0.00s           │
+                             └───────────────────────────┘

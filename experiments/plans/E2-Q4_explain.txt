@@ -1,0 +1,32 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│          modality         │
+│                           │
+│       ~763,963 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│       ~763,963 rows       │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││          SEQ_SCAN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│   nlst.main.lung_cancer   ││    nlst.main.masterfile   │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         patient_id        ││         patient_id        │
+│          modality         ││                           │
+│                           ││                           │
+│       ~666,943 rows       ││        ~1,252 rows        │
+└───────────────────────────┘└───────────────────────────┘

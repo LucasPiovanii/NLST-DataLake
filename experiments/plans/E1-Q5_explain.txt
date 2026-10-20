@@ -1,0 +1,39 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│          slide_id         │
+│          modality         │
+│         timepoint         │
+│                           │
+│       ~381,982 rows       │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│       ~381,982 rows       │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││          SEQ_SCAN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│   nlst.main.lung_cancer   ││    nlst.main.masterfile   │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         patient_id        ││         patient_id        │
+│          modality         ││          slide_id         │
+│         timepoint         ││                           │
+│                           ││                           │
+│          Filters:         ││                           │
+│      cancer_category=     ││                           │
+│     'screen_detected'     ││                           │
+│                           ││                           │
+│       ~333,472 rows       ││        ~1,252 rows        │
+└───────────────────────────┘└───────────────────────────┘

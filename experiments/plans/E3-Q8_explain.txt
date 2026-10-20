@@ -1,0 +1,48 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│         patient_id        │
+│            age            │
+│         icd10_code        │
+│     treatment_category    │
+│                           │
+│         ~799 rows         │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│         ~799 rows         │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│   nlst.main.participant   ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││  patient_id = patient_id  │
+│                           ││                           ├──────────────┐
+│        Projections:       ││                           │              │
+│         patient_id        ││                           │              │
+│            age            ││                           │              │
+│                           ││                           │              │
+│        ~53,452 rows       ││        ~1,453 rows        │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │          SEQ_SCAN         ││          SEQ_SCAN         │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││           Table:          │
+                             │  nlst.main.cause_of_death ││    nlst.main.treatment    │
+                             │                           ││                           │
+                             │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                             │                           ││                           │
+                             │        Projections:       ││        Projections:       │
+                             │         patient_id        ││         patient_id        │
+                             │         icd10_code        ││     treatment_category    │
+                             │                           ││                           │
+                             │        ~15,224 rows       ││        ~4,643 rows        │
+                             └───────────────────────────┘└───────────────────────────┘

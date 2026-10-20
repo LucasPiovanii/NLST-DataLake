@@ -1,0 +1,91 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT p.slide_id, p.cancer_type, m.patient_id, t.treatment_category             FROM pathology p             JOIN masterfile m ON p.slide_id = m.slide_id             JOIN treatment t ON m.patient_id = t.patient_id
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0052s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          slide_id         │
+│        cancer_type        │
+│         patient_id        │
+│     treatment_category    │
+│                           │
+│                           │
+│                           │
+│         3,401 rows        │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│         3,401 rows        │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│    nlst.main.treatment    ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││    slide_id = slide_id    │
+│                           ││                           │
+│        Projections:       ││                           │
+│         patient_id        ││                           │
+│     treatment_category    ││                           │
+│                           ││           0.00s           ├──────────────┐
+│      Dynamic Filters:     ││                           │              │
+│   optional: patient_id>=  ││                           │              │
+│   '100012' AND optional:  ││                           │              │
+│    patient_id<='134493'   ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│         2,674 rows        ││         1,225 rows        │              │
+│           0.00s           ││          (0.00s)          │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │         TABLE_SCAN        ││         TABLE_SCAN        │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││           Table:          │
+                             │    nlst.main.masterfile   ││    nlst.main.pathology    │
+                             │                           ││                           │
+                             │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                             │                           ││                           │
+                             │        Projections:       ││        Projections:       │
+                             │          slide_id         ││          slide_id         │
+                             │         patient_id        ││        cancer_type        │
+                             │                           ││                           │
+                             │      Dynamic Filters:     ││                           │
+                             │ optional: slide_id>='10015││                           │
+                             │ ' AND optional: slide_id<=││                           │
+                             │       'NLSI0000526'       ││           0.00s           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │         1,252 rows        ││         1,225 rows        │
+                             │           0.00s           ││          (0.00s)          │
+                             └───────────────────────────┘└───────────────────────────┘
