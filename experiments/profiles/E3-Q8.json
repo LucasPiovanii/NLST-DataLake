@@ -1,0 +1,160 @@
+{
+    "total_bytes_written": 0,
+    "total_bytes_read": 0,
+    "system_peak_temp_dir_size": 0,
+    "system_peak_buffer_memory": 49770368,
+    "rows_returned": 7795,
+    "wal_replay_entry_count": 0,
+    "result_set_size": 436520,
+    "query_name": "SELECT pt.patient_id, pt.age, cod.icd10_code, t.treatment_category\n            FROM treatment t\n            JOIN cause_of_death cod ON t.patient_id = cod.patient_id\n            JOIN participant pt ON t.patient_id = pt.patient_id",
+    "waiting_to_attach_latency": 0.0,
+    "attach_load_storage_latency": 0.0,
+    "blocked_thread_time": 0.0,
+    "cpu_time": 0.015039135,
+    "extra_info": {},
+    "total_memory_allocated": 16777216,
+    "cumulative_cardinality": 96629,
+    "checkpoint_latency": 0.0,
+    "cumulative_rows_scanned": 73319,
+    "write_to_wal_latency": 0.0,
+    "latency": 0.031221625,
+    "attach_replay_wal_latency": 0.0,
+    "commit_local_storage_latency": 0.0,
+    "children": [
+        {
+            "system_peak_temp_dir_size": 0,
+            "system_peak_buffer_memory": 0,
+            "result_set_size": 436520,
+            "operator_timing": 0.000021195,
+            "operator_type": "PROJECTION",
+            "cpu_time": 0.014185319,
+            "extra_info": {
+                "Projections": [
+                    "patient_id",
+                    "age",
+                    "icd10_code",
+                    "treatment_category"
+                ],
+                "Estimated Cardinality": "799"
+            },
+            "cumulative_cardinality": 96629,
+            "cumulative_rows_scanned": 73319,
+            "operator_cardinality": 7795,
+            "operator_name": "PROJECTION",
+            "operator_rows_scanned": 0,
+            "children": [
+                {
+                    "system_peak_temp_dir_size": 0,
+                    "system_peak_buffer_memory": 0,
+                    "result_set_size": 436520,
+                    "operator_timing": 0.005684292,
+                    "operator_type": "HASH_JOIN",
+                    "cpu_time": 0.014164124,
+                    "extra_info": {
+                        "Join Type": "INNER",
+                        "Conditions": "patient_id = patient_id",
+                        "Estimated Cardinality": "799"
+                    },
+                    "cumulative_cardinality": 88834,
+                    "cumulative_rows_scanned": 73319,
+                    "operator_cardinality": 7795,
+                    "operator_name": "HASH_JOIN",
+                    "operator_rows_scanned": 0,
+                    "children": [
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 1281048,
+                            "operator_timing": 0.003524,
+                            "operator_type": "TABLE_SCAN",
+                            "cpu_time": 0.003524,
+                            "extra_info": {
+                                "Table": "nlst.main.participant",
+                                "Type": "Sequential Scan",
+                                "Projections": [
+                                    "patient_id",
+                                    "age"
+                                ],
+                                "Estimated Cardinality": "53452",
+                                "Dynamic Filters": "optional: patient_id>='100055' AND optional: patient_id<='218873'"
+                            },
+                            "cumulative_cardinality": 53377,
+                            "cumulative_rows_scanned": 53452,
+                            "operator_cardinality": 53377,
+                            "operator_name": "SEQ_SCAN",
+                            "operator_rows_scanned": 53452,
+                            "children": []
+                        },
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 374160,
+                            "operator_timing": 0.0027396990000000004,
+                            "operator_type": "HASH_JOIN",
+                            "cpu_time": 0.004955832,
+                            "extra_info": {
+                                "Join Type": "INNER",
+                                "Conditions": "patient_id = patient_id",
+                                "Estimated Cardinality": "1453"
+                            },
+                            "cumulative_cardinality": 27662,
+                            "cumulative_rows_scanned": 19867,
+                            "operator_cardinality": 7795,
+                            "operator_name": "HASH_JOIN",
+                            "operator_rows_scanned": 0,
+                            "children": [
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 487168,
+                                    "operator_timing": 0.001857234,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.001857234,
+                                    "extra_info": {
+                                        "Table": "nlst.main.cause_of_death",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "patient_id",
+                                            "icd10_code"
+                                        ],
+                                        "Estimated Cardinality": "15224",
+                                        "Dynamic Filters": "optional: patient_id>='100012' AND optional: patient_id<='218886'"
+                                    },
+                                    "cumulative_cardinality": 15224,
+                                    "cumulative_rows_scanned": 15224,
+                                    "operator_cardinality": 15224,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 15224,
+                                    "children": []
+                                },
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 148576,
+                                    "operator_timing": 0.000358899,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.000358899,
+                                    "extra_info": {
+                                        "Table": "nlst.main.treatment",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "patient_id",
+                                            "treatment_category"
+                                        ],
+                                        "Estimated Cardinality": "4643"
+                                    },
+                                    "cumulative_cardinality": 4643,
+                                    "cumulative_rows_scanned": 4643,
+                                    "operator_cardinality": 4643,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 4643,
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
