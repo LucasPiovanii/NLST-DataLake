@@ -1,0 +1,69 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT p.slide_id, p.cancer_type, m.patient_id             FROM pathology p             JOIN masterfile m ON p.slide_id = m.slide_id             WHERE p.cancer_type = '2-3-Bronchio-Alveolar-Carcinoma'
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0049s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          slide_id         │
+│        cancer_type        │
+│         patient_id        │
+│                           │
+│                           │
+│                           │
+│          155 rows         │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│    slide_id = slide_id    ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│          155 rows         │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         TABLE_SCAN        │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│    nlst.main.masterfile   ││    nlst.main.pathology    │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│          slide_id         ││          slide_id         │
+│         patient_id        ││        cancer_type        │
+│                           ││                           │
+│      Dynamic Filters:     ││          Filters:         │
+│ optional: slide_id>='10025││ cancer_type='2-3-Bronchio │
+│ ' AND optional: slide_id<=││    -Alveolar-Carcinoma'   │
+│ 'NLSI0000233' AND optional││                           │
+│ : slide_id IN BF(slide_id)││                           │
+│                           ││                           │
+│                           ││                           │
+│                           ││           0.00s           │
+│          162 rows         ││          155 rows         │
+│           0.00s           ││          (0.00s)          │
+└───────────────────────────┘└───────────────────────────┘

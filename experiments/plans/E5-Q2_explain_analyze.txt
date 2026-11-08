@@ -1,0 +1,102 @@
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE SELECT t.treatment_category, COUNT(DISTINCT m.patient_id) AS n_patients             FROM masterfile m             JOIN pathology p ON m.slide_id = p.slide_id             JOIN treatment t ON m.patient_id = t.patient_id             GROUP BY t.treatment_category
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0138s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│         Groups: #0        │
+│                           │
+│        Aggregates:        │
+│     count(DISTINCT #1)    │
+│                           │
+│                           │
+│                           │
+│           4 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│     treatment_category    │
+│         patient_id        │
+│                           │
+│                           │
+│                           │
+│         3,401 rows        │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│         3,401 rows        │              │
+│           0.00s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│    nlst.main.treatment    ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││    slide_id = slide_id    │
+│                           ││                           │
+│        Projections:       ││                           │
+│         patient_id        ││                           │
+│     treatment_category    ││                           │
+│                           ││           0.00s           ├──────────────┐
+│      Dynamic Filters:     ││                           │              │
+│   optional: patient_id>=  ││                           │              │
+│   '100012' AND optional:  ││                           │              │
+│    patient_id<='134493'   ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│         2,674 rows        ││         1,225 rows        │              │
+│           0.00s           ││          (0.00s)          │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │         TABLE_SCAN        ││         TABLE_SCAN        │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││           Table:          │
+                             │    nlst.main.masterfile   ││    nlst.main.pathology    │
+                             │                           ││                           │
+                             │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                             │                           ││   Projections: slide_id   │
+                             │        Projections:       ││                           │
+                             │          slide_id         ││                           │
+                             │         patient_id        ││                           │
+                             │                           ││                           │
+                             │      Dynamic Filters:     ││           0.00s           │
+                             │ optional: slide_id>='10015││                           │
+                             │ ' AND optional: slide_id<=││                           │
+                             │       'NLSI0000526'       ││                           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │                           ││                           │
+                             │         1,252 rows        ││         1,225 rows        │
+                             │           0.00s           ││          (0.00s)          │
+                             └───────────────────────────┘└───────────────────────────┘

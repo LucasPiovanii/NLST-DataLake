@@ -1,0 +1,44 @@
+============================================================
+BUILD SILVER — Medical Complications (CSV + SAS → Parquet)
+============================================================
+
+── 1. Reading CSV ──
+  Shape: 845 rows × 8 cols
+
+── 2. Parsing SAS formats ──
+  Found mappings for 5 variables
+    compcode: 43 values
+    compcat: 3 values
+    scr_link: 2 values
+    comp_year: 7 values
+    can_link: 2 values
+
+── 3. Applying SAS formats ──
+  Applied SAS formats to 5 columns
+  New shape: 845 rows × 13 cols
+
+── 4. Saving to Silver ──
+  Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/silver/medical_complications.parquet
+  Rows: 845, Columns: 13
+
+── 5. Validation ──
+shape: (5, 13)
+┌────────────┬────────┬──────────┬───────────┬───┬────────────┬────────────┬───────────┬───────────┐
+│ dataset_ve ┆ pid    ┆ can_link ┆ comp_days ┆ … ┆ compcat_la ┆ scr_link_l ┆ comp_year ┆ can_link_ │
+│ rsion      ┆ ---    ┆ ---      ┆ ---       ┆   ┆ bel        ┆ abel       ┆ _label    ┆ label     │
+│ ---        ┆ i64    ┆ i64      ┆ i64       ┆   ┆ ---        ┆ ---        ┆ ---       ┆ ---       │
+│ str        ┆        ┆          ┆           ┆   ┆ str        ┆ str        ┆ str       ┆ str       │
+╞════════════╪════════╪══════════╪═══════════╪═══╪════════════╪════════════╪═══════════╪═══════════╡
+│ 2011.02.03 ┆ 100055 ┆ 1        ┆ 187       ┆ … ┆ (2) Interm ┆ (1) Yes    ┆ (0) T0    ┆ (1) Yes   │
+│ /04.07.22  ┆        ┆          ┆           ┆   ┆ ediate     ┆            ┆           ┆           │
+│ 2011.02.03 ┆ 100055 ┆ 1        ┆ 187       ┆ … ┆ (2) Interm ┆ (1) Yes    ┆ (0) T0    ┆ (1) Yes   │
+│ /04.07.22  ┆        ┆          ┆           ┆   ┆ ediate     ┆            ┆           ┆           │
+│ 2011.02.03 ┆ 100158 ┆ 1        ┆ 797       ┆ … ┆ (1) Major  ┆ (1) Yes    ┆ (2) T2    ┆ (1) Yes   │
+│ /04.07.22  ┆        ┆          ┆           ┆   ┆            ┆            ┆           ┆           │
+│ 2011.02.03 ┆ 100158 ┆ 1        ┆ 803       ┆ … ┆ (2) Interm ┆ (1) Yes    ┆ (2) T2    ┆ (1) Yes   │
+│ /04.07.22  ┆        ┆          ┆           ┆   ┆ ediate     ┆            ┆           ┆           │
+│ 2011.02.03 ┆ 100264 ┆ 1        ┆ 524       ┆ … ┆ (2) Interm ┆ (0) No     ┆ (1) T1    ┆ (1) Yes   │
+│ /04.07.22  ┆        ┆          ┆           ┆   ┆ ediate     ┆            ┆           ┆           │
+└────────────┴────────┴──────────┴───────────┴───┴────────────┴────────────┴───────────┴───────────┘
+
+✓ Done!

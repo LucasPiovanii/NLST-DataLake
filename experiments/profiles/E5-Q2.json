@@ -1,0 +1,175 @@
+{
+    "total_bytes_written": 0,
+    "total_bytes_read": 0,
+    "system_peak_temp_dir_size": 0,
+    "system_peak_buffer_memory": 49770368,
+    "rows_returned": 4,
+    "wal_replay_entry_count": 0,
+    "result_set_size": 96,
+    "query_name": "SELECT t.treatment_category, COUNT(DISTINCT m.patient_id) AS n_patients\n            FROM masterfile m\n            JOIN pathology p ON m.slide_id = p.slide_id\n            JOIN treatment t ON m.patient_id = t.patient_id\n            GROUP BY t.treatment_category",
+    "waiting_to_attach_latency": 0.0,
+    "attach_load_storage_latency": 0.0,
+    "blocked_thread_time": 0.0,
+    "cpu_time": 0.006420545999999999,
+    "extra_info": {},
+    "total_memory_allocated": 54525952,
+    "cumulative_cardinality": 13182,
+    "checkpoint_latency": 0.0,
+    "cumulative_rows_scanned": 7120,
+    "write_to_wal_latency": 0.0,
+    "latency": 0.013653047,
+    "attach_replay_wal_latency": 0.0,
+    "commit_local_storage_latency": 0.0,
+    "children": [
+        {
+            "system_peak_temp_dir_size": 0,
+            "system_peak_buffer_memory": 0,
+            "result_set_size": 96,
+            "operator_timing": 0.0033654509999999998,
+            "operator_type": "HASH_GROUP_BY",
+            "cpu_time": 0.006343216,
+            "extra_info": {
+                "Groups": "#0",
+                "Aggregates": "count(DISTINCT #1)",
+                "Estimated Cardinality": "120"
+            },
+            "cumulative_cardinality": 13182,
+            "cumulative_rows_scanned": 7120,
+            "operator_cardinality": 4,
+            "operator_name": "HASH_GROUP_BY",
+            "operator_rows_scanned": 0,
+            "children": [
+                {
+                    "system_peak_temp_dir_size": 0,
+                    "system_peak_buffer_memory": 0,
+                    "result_set_size": 108832,
+                    "operator_timing": 0.0000028309999999999997,
+                    "operator_type": "PROJECTION",
+                    "cpu_time": 0.002977765,
+                    "extra_info": {
+                        "Projections": [
+                            "treatment_category",
+                            "patient_id"
+                        ],
+                        "Estimated Cardinality": "3414"
+                    },
+                    "cumulative_cardinality": 13178,
+                    "cumulative_rows_scanned": 7120,
+                    "operator_cardinality": 3401,
+                    "operator_name": "PROJECTION",
+                    "operator_rows_scanned": 0,
+                    "children": [
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 108832,
+                            "operator_timing": 0.0012577789999999999,
+                            "operator_type": "HASH_JOIN",
+                            "cpu_time": 0.002974934,
+                            "extra_info": {
+                                "Join Type": "INNER",
+                                "Conditions": "patient_id = patient_id",
+                                "Estimated Cardinality": "3414"
+                            },
+                            "cumulative_cardinality": 9777,
+                            "cumulative_rows_scanned": 7120,
+                            "operator_cardinality": 3401,
+                            "operator_name": "HASH_JOIN",
+                            "operator_rows_scanned": 0,
+                            "children": [
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 85568,
+                                    "operator_timing": 0.000574831,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.000574831,
+                                    "extra_info": {
+                                        "Table": "nlst.main.treatment",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "patient_id",
+                                            "treatment_category"
+                                        ],
+                                        "Estimated Cardinality": "4643",
+                                        "Dynamic Filters": "optional: patient_id>='100012' AND optional: patient_id<='134493'"
+                                    },
+                                    "cumulative_cardinality": 2674,
+                                    "cumulative_rows_scanned": 4643,
+                                    "operator_cardinality": 2674,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 4643,
+                                    "children": []
+                                },
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 39200,
+                                    "operator_timing": 0.0008119119999999999,
+                                    "operator_type": "HASH_JOIN",
+                                    "cpu_time": 0.001142324,
+                                    "extra_info": {
+                                        "Join Type": "INNER",
+                                        "Conditions": "slide_id = slide_id",
+                                        "Estimated Cardinality": "1480"
+                                    },
+                                    "cumulative_cardinality": 3702,
+                                    "cumulative_rows_scanned": 2477,
+                                    "operator_cardinality": 1225,
+                                    "operator_name": "HASH_JOIN",
+                                    "operator_rows_scanned": 0,
+                                    "children": [
+                                        {
+                                            "system_peak_temp_dir_size": 0,
+                                            "system_peak_buffer_memory": 0,
+                                            "result_set_size": 40064,
+                                            "operator_timing": 0.000265639,
+                                            "operator_type": "TABLE_SCAN",
+                                            "cpu_time": 0.000265639,
+                                            "extra_info": {
+                                                "Table": "nlst.main.masterfile",
+                                                "Type": "Sequential Scan",
+                                                "Projections": [
+                                                    "slide_id",
+                                                    "patient_id"
+                                                ],
+                                                "Estimated Cardinality": "1252",
+                                                "Dynamic Filters": "optional: slide_id>='10015' AND optional: slide_id<='NLSI0000526'"
+                                            },
+                                            "cumulative_cardinality": 1252,
+                                            "cumulative_rows_scanned": 1252,
+                                            "operator_cardinality": 1252,
+                                            "operator_name": "SEQ_SCAN",
+                                            "operator_rows_scanned": 1252,
+                                            "children": []
+                                        },
+                                        {
+                                            "system_peak_temp_dir_size": 0,
+                                            "system_peak_buffer_memory": 0,
+                                            "result_set_size": 19600,
+                                            "operator_timing": 0.000064773,
+                                            "operator_type": "TABLE_SCAN",
+                                            "cpu_time": 0.000064773,
+                                            "extra_info": {
+                                                "Table": "nlst.main.pathology",
+                                                "Type": "Sequential Scan",
+                                                "Projections": "slide_id",
+                                                "Estimated Cardinality": "1225"
+                                            },
+                                            "cumulative_cardinality": 1225,
+                                            "cumulative_rows_scanned": 1225,
+                                            "operator_cardinality": 1225,
+                                            "operator_name": "SEQ_SCAN",
+                                            "operator_rows_scanned": 1225,
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

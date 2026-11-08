@@ -1,0 +1,160 @@
+{
+    "total_bytes_written": 0,
+    "total_bytes_read": 0,
+    "system_peak_temp_dir_size": 0,
+    "system_peak_buffer_memory": 41499264,
+    "rows_returned": 405771,
+    "wal_replay_entry_count": 0,
+    "result_set_size": 25969344,
+    "query_name": "SELECT p.slide_id, p.cancer_type, m.patient_id, lc.modality\n            FROM lung_cancer lc\n            JOIN masterfile m ON lc.patient_id = m.patient_id\n            JOIN pathology p ON m.slide_id = p.slide_id",
+    "waiting_to_attach_latency": 0.0,
+    "attach_load_storage_latency": 0.0,
+    "blocked_thread_time": 0.0,
+    "cpu_time": 0.186637913,
+    "extra_info": {},
+    "total_memory_allocated": 16777216,
+    "cumulative_cardinality": 1308578,
+    "checkpoint_latency": 0.0,
+    "cumulative_rows_scanned": 658912,
+    "write_to_wal_latency": 0.0,
+    "latency": 0.38012437,
+    "attach_replay_wal_latency": 0.0,
+    "commit_local_storage_latency": 0.0,
+    "children": [
+        {
+            "system_peak_temp_dir_size": 0,
+            "system_peak_buffer_memory": 0,
+            "result_set_size": 25969344,
+            "operator_timing": 0.0003633349999999999,
+            "operator_type": "PROJECTION",
+            "cpu_time": 0.032323954999999994,
+            "extra_info": {
+                "Projections": [
+                    "slide_id",
+                    "cancer_type",
+                    "patient_id",
+                    "modality"
+                ],
+                "Estimated Cardinality": "903335"
+            },
+            "cumulative_cardinality": 1308578,
+            "cumulative_rows_scanned": 658912,
+            "operator_cardinality": 405771,
+            "operator_name": "PROJECTION",
+            "operator_rows_scanned": 0,
+            "children": [
+                {
+                    "system_peak_temp_dir_size": 0,
+                    "system_peak_buffer_memory": 0,
+                    "result_set_size": 25969344,
+                    "operator_timing": 0.017944681999999997,
+                    "operator_type": "HASH_JOIN",
+                    "cpu_time": 0.031960619999999995,
+                    "extra_info": {
+                        "Join Type": "INNER",
+                        "Conditions": "patient_id = patient_id",
+                        "Estimated Cardinality": "903335"
+                    },
+                    "cumulative_cardinality": 902807,
+                    "cumulative_rows_scanned": 658912,
+                    "operator_cardinality": 405771,
+                    "operator_name": "HASH_JOIN",
+                    "operator_rows_scanned": 0,
+                    "children": [
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 15786688,
+                            "operator_timing": 0.013261326,
+                            "operator_type": "TABLE_SCAN",
+                            "cpu_time": 0.013261326,
+                            "extra_info": {
+                                "Table": "nlst.main.lung_cancer",
+                                "Type": "Sequential Scan",
+                                "Projections": [
+                                    "patient_id",
+                                    "modality"
+                                ],
+                                "Estimated Cardinality": "666943",
+                                "Dynamic Filters": "optional: patient_id>='100012' AND optional: patient_id<='134493'"
+                            },
+                            "cumulative_cardinality": 493334,
+                            "cumulative_rows_scanned": 656435,
+                            "operator_cardinality": 493334,
+                            "operator_name": "SEQ_SCAN",
+                            "operator_rows_scanned": 656435,
+                            "children": []
+                        },
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 58800,
+                            "operator_timing": 0.0005765729999999999,
+                            "operator_type": "HASH_JOIN",
+                            "cpu_time": 0.0007546119999999999,
+                            "extra_info": {
+                                "Join Type": "INNER",
+                                "Conditions": "slide_id = slide_id",
+                                "Estimated Cardinality": "1480"
+                            },
+                            "cumulative_cardinality": 3702,
+                            "cumulative_rows_scanned": 2477,
+                            "operator_cardinality": 1225,
+                            "operator_name": "HASH_JOIN",
+                            "operator_rows_scanned": 0,
+                            "children": [
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 40064,
+                                    "operator_timing": 0.000104208,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.000104208,
+                                    "extra_info": {
+                                        "Table": "nlst.main.masterfile",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "patient_id",
+                                            "slide_id"
+                                        ],
+                                        "Estimated Cardinality": "1252",
+                                        "Dynamic Filters": "optional: slide_id>='10015' AND optional: slide_id<='NLSI0000526'"
+                                    },
+                                    "cumulative_cardinality": 1252,
+                                    "cumulative_rows_scanned": 1252,
+                                    "operator_cardinality": 1252,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 1252,
+                                    "children": []
+                                },
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 39200,
+                                    "operator_timing": 0.000073831,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.000073831,
+                                    "extra_info": {
+                                        "Table": "nlst.main.pathology",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "slide_id",
+                                            "cancer_type"
+                                        ],
+                                        "Estimated Cardinality": "1225"
+                                    },
+                                    "cumulative_cardinality": 1225,
+                                    "cumulative_rows_scanned": 1225,
+                                    "operator_cardinality": 1225,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 1225,
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

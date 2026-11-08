@@ -1,0 +1,28 @@
+┌───────────────────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│        ~1,276 rows        │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││          SEQ_SCAN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││           Table:          │
+│   nlst.main.participant   ││    nlst.main.treatment    │
+│                           ││                           │
+│   Type: Sequential Scan   ││   Type: Sequential Scan   │
+│                           ││                           │
+│        Projections:       ││        Projections:       │
+│         patient_id        ││         patient_id        │
+│            age            ││     treatment_category    │
+│           gender          ││                           │
+│                           ││          Filters:         │
+│                           ││  treatment_category='(2)  │
+│                           ││          Surgical'        │
+│                           ││                           │
+│        ~53,452 rows       ││        ~1,161 rows        │
+└───────────────────────────┘└───────────────────────────┘

@@ -1,0 +1,128 @@
+{
+    "total_bytes_written": 0,
+    "total_bytes_read": 0,
+    "system_peak_temp_dir_size": 0,
+    "system_peak_buffer_memory": 29444608,
+    "rows_returned": 206944,
+    "wal_replay_entry_count": 0,
+    "result_set_size": 6622208,
+    "query_name": "SELECT m.patient_id, lc.modality\n            FROM masterfile m\n            JOIN (SELECT * FROM lung_cancer USING SAMPLE 50 PERCENT (bernoulli)) lc\n              ON m.patient_id = lc.patient_id",
+    "waiting_to_attach_latency": 0.0,
+    "attach_load_storage_latency": 0.0,
+    "blocked_thread_time": 0.0,
+    "cpu_time": 0.031968503999999995,
+    "extra_info": {},
+    "total_memory_allocated": 4194304,
+    "cumulative_cardinality": 1416216,
+    "checkpoint_latency": 0.0,
+    "cumulative_rows_scanned": 668195,
+    "write_to_wal_latency": 0.0,
+    "latency": 0.112987281,
+    "attach_replay_wal_latency": 0.0,
+    "commit_local_storage_latency": 0.0,
+    "children": [
+        {
+            "system_peak_temp_dir_size": 0,
+            "system_peak_buffer_memory": 0,
+            "result_set_size": 6622208,
+            "operator_timing": 0.00006968099999999999,
+            "operator_type": "PROJECTION",
+            "cpu_time": 0.025517425,
+            "extra_info": {
+                "Projections": [
+                    "patient_id",
+                    "modality"
+                ],
+                "Estimated Cardinality": "3450460"
+            },
+            "cumulative_cardinality": 1416216,
+            "cumulative_rows_scanned": 668195,
+            "operator_cardinality": 206944,
+            "operator_name": "PROJECTION",
+            "operator_rows_scanned": 0,
+            "children": [
+                {
+                    "system_peak_temp_dir_size": 0,
+                    "system_peak_buffer_memory": 0,
+                    "result_set_size": 6622208,
+                    "operator_timing": 0.005909155000000005,
+                    "operator_type": "HASH_JOIN",
+                    "cpu_time": 0.025447744,
+                    "extra_info": {
+                        "Join Type": "INNER",
+                        "Conditions": "patient_id = patient_id",
+                        "Estimated Cardinality": "3450460"
+                    },
+                    "cumulative_cardinality": 1209272,
+                    "cumulative_rows_scanned": 668195,
+                    "operator_cardinality": 206944,
+                    "operator_name": "HASH_JOIN",
+                    "operator_rows_scanned": 0,
+                    "children": [
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 10692256,
+                            "operator_timing": 0.017587371999999997,
+                            "operator_type": "STREAMING_SAMPLE",
+                            "cpu_time": 0.019489740999999994,
+                            "extra_info": {
+                                "Sample Method": "Bernoulli: 50.000000%"
+                            },
+                            "cumulative_cardinality": 1001076,
+                            "cumulative_rows_scanned": 666943,
+                            "operator_cardinality": 334133,
+                            "operator_name": "STREAMING_SAMPLE",
+                            "operator_rows_scanned": 0,
+                            "children": [
+                                {
+                                    "system_peak_temp_dir_size": 0,
+                                    "system_peak_buffer_memory": 0,
+                                    "result_set_size": 21342176,
+                                    "operator_timing": 0.0019023689999999977,
+                                    "operator_type": "TABLE_SCAN",
+                                    "cpu_time": 0.0019023689999999977,
+                                    "extra_info": {
+                                        "Table": "nlst.main.lung_cancer",
+                                        "Type": "Sequential Scan",
+                                        "Projections": [
+                                            "patient_id",
+                                            "modality"
+                                        ],
+                                        "Estimated Cardinality": "0"
+                                    },
+                                    "cumulative_cardinality": 666943,
+                                    "cumulative_rows_scanned": 666943,
+                                    "operator_cardinality": 666943,
+                                    "operator_name": "SEQ_SCAN",
+                                    "operator_rows_scanned": 666943,
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "system_peak_temp_dir_size": 0,
+                            "system_peak_buffer_memory": 0,
+                            "result_set_size": 20032,
+                            "operator_timing": 0.000048848000000000004,
+                            "operator_type": "TABLE_SCAN",
+                            "cpu_time": 0.000048848000000000004,
+                            "extra_info": {
+                                "Table": "nlst.main.masterfile",
+                                "Type": "Sequential Scan",
+                                "Projections": "patient_id",
+                                "Estimated Cardinality": "1252"
+                            },
+                            "cumulative_cardinality": 1252,
+                            "cumulative_rows_scanned": 1252,
+                            "operator_cardinality": 1252,
+                            "operator_name": "SEQ_SCAN",
+                            "operator_rows_scanned": 1252,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

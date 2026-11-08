@@ -1,0 +1,34 @@
+============================================================
+BUILD GOLD — Medical Complications
+============================================================
+
+Silver: 845 rows × 13 cols
+Gold: 845 rows × 7 cols
+Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/gold/medical_complications.parquet
+
+Sample:
+shape: (5, 7)
+┌────────────┬───────────┬───────────┬───────────────┬───────────────┬──────────────┬──────────────┐
+│ patient_id ┆ comp_days ┆ comp_year ┆ complication_ ┆ complication_ ┆ cancer_linke ┆ screening_li │
+│ ---        ┆ ---       ┆ ---       ┆ category      ┆ code          ┆ d            ┆ nked         │
+│ str        ┆ i64       ┆ str       ┆ ---           ┆ ---           ┆ ---          ┆ ---          │
+│            ┆           ┆           ┆ str           ┆ str           ┆ str          ┆ str          │
+╞════════════╪═══════════╪═══════════╪═══════════════╪═══════════════╪══════════════╪══════════════╡
+│ 100055     ┆ 187       ┆ (0) T0    ┆ (2)           ┆ (17) Hospital ┆ (1) Yes      ┆ (1) Yes      │
+│            ┆           ┆           ┆ Intermediate  ┆ ization post  ┆              ┆              │
+│            ┆           ┆           ┆               ┆ proc…         ┆              ┆              │
+│ 100055     ┆ 187       ┆ (0) T0    ┆ (2)           ┆ (23)          ┆ (1) Yes      ┆ (1) Yes      │
+│            ┆           ┆           ┆ Intermediate  ┆ Pneumothorax  ┆              ┆              │
+│            ┆           ┆           ┆               ┆ requiring tu… ┆              ┆              │
+│ 100158     ┆ 797       ┆ (2) T2    ┆ (1) Major     ┆ (1) Acute     ┆ (1) Yes      ┆ (1) Yes      │
+│            ┆           ┆           ┆               ┆ respiratory   ┆              ┆              │
+│            ┆           ┆           ┆               ┆ failure       ┆              ┆              │
+│ 100158     ┆ 803       ┆ (2) T2    ┆ (2)           ┆ (23)          ┆ (1) Yes      ┆ (1) Yes      │
+│            ┆           ┆           ┆ Intermediate  ┆ Pneumothorax  ┆              ┆              │
+│            ┆           ┆           ┆               ┆ requiring tu… ┆              ┆              │
+│ 100264     ┆ 524       ┆ (1) T1    ┆ (2)           ┆ (17) Hospital ┆ (1) Yes      ┆ (0) No       │
+│            ┆           ┆           ┆ Intermediate  ┆ ization post  ┆              ┆              │
+│            ┆           ┆           ┆               ┆ proc…         ┆              ┆              │
+└────────────┴───────────┴───────────┴───────────────┴───────────────┴──────────────┴──────────────┘
+
+✓ Done!

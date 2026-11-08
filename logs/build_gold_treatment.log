@@ -1,0 +1,34 @@
+============================================================
+BUILD GOLD — Treatment
+============================================================
+
+Silver: 4643 rows × 13 cols
+Gold: 4643 rows × 7 cols
+Saved to /nfs/home/lucas_piovani/NLST-DataLake/datalake/gold/treatment.parquet
+
+Sample:
+shape: (5, 7)
+┌────────────┬──────────────┬──────────────┬────────────┬──────────────┬─────────────┬─────────────┐
+│ patient_id ┆ treatment_ca ┆ treatment_pr ┆ treat_days ┆ treatment_ye ┆ residual_di ┆ rad_stop_da │
+│ ---        ┆ tegory       ┆ ocedure      ┆ ---        ┆ ar           ┆ sease       ┆ ys          │
+│ str        ┆ ---          ┆ ---          ┆ f64        ┆ ---          ┆ ---         ┆ ---         │
+│            ┆ str          ┆ str          ┆            ┆ str          ┆ str         ┆ f64         │
+╞════════════╪══════════════╪══════════════╪════════════╪══════════════╪═════════════╪═════════════╡
+│ 100012     ┆ (2) Surgical ┆ (203)        ┆ 483.0      ┆ (1) T1       ┆ null        ┆ null        │
+│            ┆              ┆ Lobectomy    ┆            ┆              ┆             ┆             │
+│ 100012     ┆ (2) Surgical ┆ (208) Lympha ┆ 483.0      ┆ (1) T1       ┆ null        ┆ null        │
+│            ┆              ┆ denectomy/Ly ┆            ┆              ┆             ┆             │
+│            ┆              ┆ mph No…      ┆            ┆              ┆             ┆             │
+│ 100049     ┆ (1)          ┆ (101)        ┆ 2471.0     ┆ (6) T6       ┆ null        ┆ 2499.0      │
+│            ┆ Radiation    ┆ Radiation of ┆            ┆              ┆             ┆             │
+│            ┆              ┆ Primary Che… ┆            ┆              ┆             ┆             │
+│ 100055     ┆ (2) Surgical ┆ (201)        ┆ 148.0      ┆ (0) T0       ┆ null        ┆ null        │
+│            ┆              ┆ Exploratory  ┆            ┆              ┆             ┆             │
+│            ┆              ┆ Thoracotomy  ┆            ┆              ┆             ┆             │
+│            ┆              ┆ …            ┆            ┆              ┆             ┆             │
+│ 100055     ┆ (2) Surgical ┆ (208) Lympha ┆ 148.0      ┆ (0) T0       ┆ null        ┆ null        │
+│            ┆              ┆ denectomy/Ly ┆            ┆              ┆             ┆             │
+│            ┆              ┆ mph No…      ┆            ┆              ┆             ┆             │
+└────────────┴──────────────┴──────────────┴────────────┴──────────────┴─────────────┴─────────────┘
+
+✓ Done!

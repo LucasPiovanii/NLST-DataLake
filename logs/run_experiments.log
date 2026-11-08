@@ -1,0 +1,174 @@
+======================================================================
+NLST JOIN OPTIMIZATION EXPERIMENTS — 23 queries × 10 rounds
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q1: JOIN pathology-masterfile, no filter (baseline)
+  Experiment: E1_filter_vs_no_filter
+  Rows: 1,225
+  Time: 0.0044s (min=0.0031, max=0.0083, std=0.0016)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q2: JOIN pathology-masterfile, filter adenocarcinoma (~45%)
+  Experiment: E1_filter_vs_no_filter
+  Rows: 553
+  Time: 0.0051s (min=0.0039, max=0.0059, std=0.0006)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q3: JOIN pathology-masterfile, filter bronchio-alveolar (~5%)
+  Experiment: E1_filter_vs_no_filter
+  Rows: 155
+  Time: 0.0051s (min=0.0044, max=0.0060, std=0.0006)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q4: JOIN masterfile-lung_cancer, no filter (baseline with cardinality explosion)
+  Experiment: E1_filter_vs_no_filter
+  Rows: 412,269
+  Time: 0.4489s (min=0.4329, max=0.4993, std=0.0187)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q5: JOIN masterfile-lung_cancer, filter screen_detected
+  Experiment: E1_filter_vs_no_filter
+  Rows: 332,688
+  Time: 0.3595s (min=0.3495, max=0.3755, std=0.0074)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q6: JOIN participant-treatment, no filter
+  Experiment: E1_filter_vs_no_filter
+  Rows: 4,643
+  Time: 0.0132s (min=0.0107, max=0.0197, std=0.0032)
+
+──────────────────────────────────────────────────────────────────────
+  E1-Q7: JOIN participant-treatment, filter surgical only
+  Experiment: E1_filter_vs_no_filter
+  Rows: 2,830
+  Time: 0.0113s (min=0.0085, max=0.0175, std=0.0029)
+
+──────────────────────────────────────────────────────────────────────
+  E2-Q1: lung_cancer 10% sample JOIN masterfile
+  Experiment: E2_data_size
+  Rows: 40,890
+  Time: 0.0481s (min=0.0439, max=0.0771, std=0.0097)
+
+──────────────────────────────────────────────────────────────────────
+  E2-Q2: lung_cancer 25% sample JOIN masterfile
+  Experiment: E2_data_size
+  Rows: 102,194
+  Time: 0.0961s (min=0.0789, max=0.1328, std=0.0192)
+
+──────────────────────────────────────────────────────────────────────
+  E2-Q3: lung_cancer 50% sample JOIN masterfile
+  Experiment: E2_data_size
+  Rows: 206,303
+  Time: 0.1117s (min=0.0828, max=0.1750, std=0.0358)
+
+──────────────────────────────────────────────────────────────────────
+  E2-Q4: lung_cancer 100% JOIN masterfile
+  Experiment: E2_data_size
+  Rows: 412,269
+  Time: 0.1555s (min=0.1470, max=0.1685, std=0.0056)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q1: 3-way: pathology -> masterfile -> lung_cancer (small first)
+  Experiment: E3_join_order
+  Rows: 405,771
+  Time: 0.3246s (min=0.2842, max=0.4727, std=0.0502)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q2: 3-way: lung_cancer -> masterfile -> pathology (large first)
+  Experiment: E3_join_order
+  Rows: 405,771
+  Time: 0.3863s (min=0.3089, max=0.4768, std=0.0766)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q3: 3-way: pathology -> masterfile -> treatment (small-small-medium)
+  Experiment: E3_join_order
+  Rows: 3,401
+  Time: 0.0089s (min=0.0060, max=0.0121, std=0.0018)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q4: 3-way: treatment -> masterfile -> pathology (medium first)
+  Experiment: E3_join_order
+  Rows: 3,401
+  Time: 0.0100s (min=0.0062, max=0.0154, std=0.0028)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q5: 4-way: pathology -> masterfile -> lung_cancer -> treatment
+  Experiment: E3_join_order
+  Rows: 1,098,213
+  Time: 1.1228s (min=0.9849, max=1.5578, std=0.1907)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q6: 4-way: lung_cancer -> treatment -> masterfile -> pathology (large first)
+  Experiment: E3_join_order
+  Rows: 1,098,213
+  Time: 0.9869s (min=0.9715, max=1.0072, std=0.0115)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q7: 3-way: participant -> cause_of_death -> treatment
+  Experiment: E3_join_order
+  Rows: 7,795
+  Time: 0.0139s (min=0.0105, max=0.0189, std=0.0028)
+
+──────────────────────────────────────────────────────────────────────
+  E3-Q8: 3-way: treatment -> cause_of_death -> participant (reversed)
+  Experiment: E3_join_order
+  Rows: 7,795
+  Time: 0.0159s (min=0.0108, max=0.0219, std=0.0033)
+
+──────────────────────────────────────────────────────────────────────
+  E5-Q1: COUNT by cancer_type after 3-way join
+  Experiment: E5_join_aggregation
+  Rows: 4
+  Time: 0.0315s (min=0.0272, max=0.0394, std=0.0040)
+
+──────────────────────────────────────────────────────────────────────
+  E5-Q2: COUNT DISTINCT patients by treatment_category after 3-way join
+  Experiment: E5_join_aggregation
+  Rows: 4
+  Time: 0.0124s (min=0.0096, max=0.0192, std=0.0028)
+
+──────────────────────────────────────────────────────────────────────
+  E5-Q3: Aggregation BEFORE join (subquery pre-aggregates lung_cancer)
+  Experiment: E5_join_aggregation
+  Rows: 803
+  Time: 0.0370s (min=0.0308, max=0.0448, std=0.0047)
+
+──────────────────────────────────────────────────────────────────────
+  E5-Q4: Aggregation AFTER join (aggregate on full join result)
+  Experiment: E5_join_aggregation
+  Rows: 295
+  Time: 0.0595s (min=0.0477, max=0.0694, std=0.0057)
+
+======================================================================
+SAVING RESULTS
+======================================================================
+  Parquet: /nfs/home/lucas_piovani/NLST-DataLake/experiments/results/experiment_results.parquet
+  JSON: /nfs/home/lucas_piovani/NLST-DataLake/experiments/results/experiment_results.json
+
+======================================================================
+SUMMARY
+======================================================================
+shape: (23, 6)
+┌──────────┬────────────────────────┬───────────┬─────────────┬────────────┬────────────┐
+│ query_id ┆ experiment             ┆ row_count ┆ mean_time_s ┆ min_time_s ┆ max_time_s │
+│ ---      ┆ ---                    ┆ ---       ┆ ---         ┆ ---        ┆ ---        │
+│ str      ┆ str                    ┆ i64       ┆ f64         ┆ f64        ┆ f64        │
+╞══════════╪════════════════════════╪═══════════╪═════════════╪════════════╪════════════╡
+│ E1-Q1    ┆ E1_filter_vs_no_filter ┆ 1225      ┆ 0.004403    ┆ 0.003127   ┆ 0.008294   │
+│ E1-Q2    ┆ E1_filter_vs_no_filter ┆ 553       ┆ 0.005147    ┆ 0.003949   ┆ 0.005944   │
+│ E1-Q3    ┆ E1_filter_vs_no_filter ┆ 155       ┆ 0.005088    ┆ 0.004436   ┆ 0.006037   │
+│ E1-Q4    ┆ E1_filter_vs_no_filter ┆ 412269    ┆ 0.448861    ┆ 0.432886   ┆ 0.499346   │
+│ E1-Q5    ┆ E1_filter_vs_no_filter ┆ 332688    ┆ 0.359527    ┆ 0.349525   ┆ 0.37545    │
+│ …        ┆ …                      ┆ …         ┆ …           ┆ …          ┆ …          │
+│ E3-Q8    ┆ E3_join_order          ┆ 7795      ┆ 0.015899    ┆ 0.010775   ┆ 0.021941   │
+│ E5-Q1    ┆ E5_join_aggregation    ┆ 4         ┆ 0.031493    ┆ 0.027237   ┆ 0.03942    │
+│ E5-Q2    ┆ E5_join_aggregation    ┆ 4         ┆ 0.012396    ┆ 0.009553   ┆ 0.019171   │
+│ E5-Q3    ┆ E5_join_aggregation    ┆ 803       ┆ 0.036973    ┆ 0.030789   ┆ 0.044802   │
+│ E5-Q4    ┆ E5_join_aggregation    ┆ 295       ┆ 0.059537    ┆ 0.047733   ┆ 0.06936    │
+└──────────┴────────────────────────┴───────────┴─────────────┴────────────┴────────────┘
+
+  Plans saved to: /nfs/home/lucas_piovani/NLST-DataLake/experiments/plans/
+  Queries saved to: /nfs/home/lucas_piovani/NLST-DataLake/experiments/queries/
+
+✓ Done!

@@ -1,0 +1,170 @@
+============================================================
+SETUP DUCKDB — Load All Gold Tables
+============================================================
+
+Removed existing database
+Connected to: /nfs/home/lucas_piovani/NLST-DataLake/datalake/nlst.duckdb
+
+── 1. Creating tables ──
+  pathology                           1,225 rows ×  21 cols ✓
+  masterfile                          1,252 rows ×  33 cols ✓
+  lung_cancer                       666,943 rows ×  37 cols ✓
+  participant                        53,452 rows × 355 cols ✓
+  cause_of_death                     15,224 rows ×   6 cols ✓
+  medical_complications                 845 rows ×   7 cols ✓
+  treatment                           4,643 rows ×   7 cols ✓
+
+── 2. ANALYZE ──
+  ANALYZE pathology ✓
+  ANALYZE masterfile ✓
+  ANALYZE lung_cancer ✓
+  ANALYZE participant ✓
+  ANALYZE cause_of_death ✓
+  ANALYZE medical_complications ✓
+  ANALYZE treatment ✓
+
+── 3. Tables in catalog ──
+  - cause_of_death
+  - lung_cancer
+  - masterfile
+  - medical_complications
+  - participant
+  - pathology
+  - treatment
+
+── 4. JOIN validation ──
+  pathology ⟕ masterfile                        →      1,225 rows
+  masterfile ⟕ lung_cancer                      →    412,269 rows
+  masterfile ⟕ participant                      →      1,252 rows
+  participant ⟕ treatment                       →      4,643 rows
+  participant ⟕ cause_of_death                  →     15,224 rows
+  participant ⟕ medical_complications           →        845 rows
+  3-way: path ⟕ mf ⟕ lc                         →    405,771 rows
+  3-way: mf ⟕ participant ⟕ treatment           →      3,512 rows
+  4-way: path ⟕ mf ⟕ lc ⟕ treatment             →  1,098,213 rows
+
+── 5. EXPLAIN ANALYZE (4-way join) ──
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+         EXPLAIN ANALYZE         SELECT p.slide_id, p.cancer_type, m.patient_id, lc.modality, t.treatment_category         FROM pathology p         JOIN masterfile m ON p.slide_id = m.slide_id         JOIN lung_cancer lc ON m.patient_id = lc.patient_id         JOIN treatment t ON m.patient_id = t.patient_id     
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.0210s             ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          slide_id         │
+│        cancer_type        │
+│         patient_id        │
+│          modality         │
+│     treatment_category    │
+│                           │
+│                           │
+│                           │
+│       1,098,213 rows      │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│  patient_id = patient_id  ├──────────────┐
+│                           │              │
+│                           │              │
+│                           │              │
+│       1,098,213 rows      │              │
+│           0.03s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│   nlst.main.lung_cancer   ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││  patient_id = patient_id  │
+│                           ││                           │
+│        Projections:       ││                           │
+│         patient_id        ││                           │
+│          modality         ││                           │
+│                           ││           0.00s           ├──────────────┐
+│      Dynamic Filters:     ││                           │              │
+│   optional: patient_id>=  ││                           │              │
+│   '100012' AND optional:  ││                           │              │
+│    patient_id<='134493'   ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│                           ││                           │              │
+│        503,461 rows       ││         3,401 rows        │              │
+│           0.01s           ││          (0.00s)          │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │         TABLE_SCAN        ││         HASH_JOIN         │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││      Join Type: INNER     │
+                             │    nlst.main.treatment    ││                           │
+                             │                           ││        Conditions:        │
+                             │   Type: Sequential Scan   ││    slide_id = slide_id    │
+                             │                           ││                           │
+                             │        Projections:       ││                           │
+                             │         patient_id        ││                           │
+                             │     treatment_category    ││                           │
+                             │                           ││           0.00s           ├──────────────┐
+                             │      Dynamic Filters:     ││                           │              │
+                             │   optional: patient_id>=  ││                           │              │
+                             │   '100012' AND optional:  ││                           │              │
+                             │    patient_id<='134493'   ││                           │              │
+                             │                           ││                           │              │
+                             │                           ││                           │              │
+                             │                           ││                           │              │
+                             │         2,674 rows        ││         1,225 rows        │              │
+                             │           0.00s           ││          (0.00s)          │              │
+                             └───────────────────────────┘└─────────────┬─────────────┘              │
+                                                          ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                                                          │         TABLE_SCAN        ││         TABLE_SCAN        │
+                                                          │    ────────────────────   ││    ────────────────────   │
+                                                          │           Table:          ││           Table:          │
+                                                          │    nlst.main.masterfile   ││    nlst.main.pathology    │
+                                                          │                           ││                           │
+                                                          │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                                                          │                           ││                           │
+                                                          │        Projections:       ││        Projections:       │
+                                                          │          slide_id         ││          slide_id         │
+                                                          │         patient_id        ││        cancer_type        │
+                                                          │                           ││                           │
+                                                          │      Dynamic Filters:     ││                           │
+                                                          │ optional: slide_id>='10015││                           │
+                                                          │ ' AND optional: slide_id<=││                           │
+                                                          │       'NLSI0000526'       ││           0.00s           │
+                                                          │                           ││                           │
+                                                          │                           ││                           │
+                                                          │                           ││                           │
+                                                          │         1,252 rows        ││         1,225 rows        │
+                                                          │           0.00s           ││          (0.00s)          │
+                                                          └───────────────────────────┘└───────────────────────────┘
+
+
+============================================================
+SUMMARY
+============================================================
+  Database: /nfs/home/lucas_piovani/NLST-DataLake/datalake/nlst.duckdb
+  Size: 84.0 MB
+  Tables: 7
+
+✓ Done!

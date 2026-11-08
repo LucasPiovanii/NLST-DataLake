@@ -1,0 +1,37 @@
+============================================================
+BUILD GOLD LAYER
+============================================================
+
+── 1. Pathology ──
+  Silver: 1225 rows × 65 cols
+
+── 2. Masterfile ──
+  Silver: 1252 rows × 279 cols
+
+── 3. Lung Cancer ──
+  Silver: 666943 rows × 105 cols
+  → pathology: 1225 rows × 21 cols → pathology.parquet
+  → masterfile: 1252 rows × 33 cols → masterfile.parquet
+  → lung_cancer: 666943 rows × 37 cols → lung_cancer.parquet
+
+── 4. Validação de Chaves de JOIN ──
+
+  Pathology slides:              1225
+  Masterfile slides:             1252
+  Pathology ∩ Masterfile:        1225
+
+  Masterfile patients:           452
+  Lung Cancer patients:          1045
+  Masterfile ∩ Lung Cancer:      296
+
+  Pacientes nas 3 tabelas:       295
+
+============================================================
+RESUMO GOLD LAYER
+============================================================
+  pathology.parquet:    (1225, 21)
+  masterfile.parquet:   (1252, 33)
+  lung_cancer.parquet:  (666943, 37)
+  Total size:           27.6 MB
+
+✓ Done!

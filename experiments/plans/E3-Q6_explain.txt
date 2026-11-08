@@ -1,0 +1,63 @@
+┌───────────────────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│          slide_id         │
+│        cancer_type        │
+│         patient_id        │
+│          modality         │
+│     treatment_category    │
+│                           │
+│      ~1,131,307 rows      │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        ├──────────────┐
+│  patient_id = patient_id  │              │
+│                           │              │
+│      ~1,131,307 rows      │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│          SEQ_SCAN         ││         HASH_JOIN         │
+│    ────────────────────   ││    ────────────────────   │
+│           Table:          ││      Join Type: INNER     │
+│   nlst.main.lung_cancer   ││                           │
+│                           ││        Conditions:        │
+│   Type: Sequential Scan   ││  patient_id = patient_id  │
+│                           ││                           ├──────────────┐
+│        Projections:       ││                           │              │
+│         patient_id        ││                           │              │
+│          modality         ││                           │              │
+│                           ││                           │              │
+│       ~666,943 rows       ││        ~3,414 rows        │              │
+└───────────────────────────┘└─────────────┬─────────────┘              │
+                             ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                             │          SEQ_SCAN         ││         HASH_JOIN         │
+                             │    ────────────────────   ││    ────────────────────   │
+                             │           Table:          ││      Join Type: INNER     │
+                             │    nlst.main.treatment    ││                           │
+                             │                           ││        Conditions:        │
+                             │   Type: Sequential Scan   ││    slide_id = slide_id    │
+                             │                           ││                           ├──────────────┐
+                             │        Projections:       ││                           │              │
+                             │         patient_id        ││                           │              │
+                             │     treatment_category    ││                           │              │
+                             │                           ││                           │              │
+                             │        ~4,643 rows        ││        ~1,480 rows        │              │
+                             └───────────────────────────┘└─────────────┬─────────────┘              │
+                                                          ┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+                                                          │          SEQ_SCAN         ││          SEQ_SCAN         │
+                                                          │    ────────────────────   ││    ────────────────────   │
+                                                          │           Table:          ││           Table:          │
+                                                          │    nlst.main.masterfile   ││    nlst.main.pathology    │
+                                                          │                           ││                           │
+                                                          │   Type: Sequential Scan   ││   Type: Sequential Scan   │
+                                                          │                           ││                           │
+                                                          │        Projections:       ││        Projections:       │
+                                                          │         patient_id        ││          slide_id         │
+                                                          │          slide_id         ││        cancer_type        │
+                                                          │                           ││                           │
+                                                          │        ~1,252 rows        ││        ~1,225 rows        │
+                                                          └───────────────────────────┘└───────────────────────────┘
