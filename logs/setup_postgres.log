@@ -1,0 +1,45 @@
+============================================================
+SETUP POSTGRESQL — Load Gold Tables via DuckDB
+============================================================
+
+  Loading pathology...
+    1,225 rows ✓
+
+  Loading masterfile...
+    1,252 rows ✓
+
+  Loading lung_cancer...
+    666,943 rows ✓
+
+  Loading participant...
+    53,452 rows ✓
+
+  Loading cause_of_death...
+    15,224 rows ✓
+
+  Loading medical_complications...
+    845 rows ✓
+
+  Loading treatment...
+    4,643 rows ✓
+  ANALYZE pathology ✓
+  ANALYZE masterfile ✓
+  ANALYZE lung_cancer ✓
+  ANALYZE participant ✓
+  ANALYZE cause_of_death ✓
+  ANALYZE medical_complications ✓
+  ANALYZE treatment ✓
+
+── JOIN validation ──
+  pathology ⟕ masterfile                   →      1,225 rows
+  masterfile ⟕ lung_cancer                 →    412,269 rows
+  3-way: path ⟕ mf ⟕ lc                    →    405,771 rows
+
+── PostgreSQL config ──
+  work_mem: 4MB
+  shared_buffers: 128MB
+  max_parallel_workers_per_gather: 2
+  effective_cache_size: 4GB
+  random_page_cost: 4
+
+✓ Done!

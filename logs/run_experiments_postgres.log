@@ -1,0 +1,31 @@
+==============================================================================================================
+POSTGRESQL EXPERIMENTS — Forced Algorithms & Forced Order
+==============================================================================================================
+
+── A. Forced algorithms (masterfile ⟕ lung_cancer) ──
+  Label                                    | Algorithm            |                 Time |                    Cardinality | Engine
+  PG-A1-hash                               | Hash Join            |   1508.3 ms ±  141.1 | est=   769,287 act=   412,269 | engine=773.5 ms
+  PG-A2-merge                              | Merge Join           |   1516.1 ms ±  337.5 | est=   769,287 act=   412,269 | engine=1546.4 ms
+  PG-A3-nestloop                           | Nested Loop          |   1345.1 ms ±  126.6 | est=   769,287 act=   412,269 | engine=153102.6 ms
+  PG-A4-optimizer                          | Hash Join            |   1107.0 ms ±  186.7 | est=   769,287 act=   412,269 | engine=747.3 ms
+
+── B. Forced algorithms (path ⟕ mf ⟕ lc) ──
+  PG-B1-hash                               | Hash Join            |   1466.7 ms ±  226.3 | est=   752,697 act=   405,771 | engine=550.0 ms
+  PG-B2-merge                              | Merge Join           |   1553.3 ms ±  127.2 | est=   752,697 act=   405,771 | engine=1803.3 ms
+  PG-B3-nestloop                           | Nested Loop          |   1053.7 ms ±  245.0 | est=   752,697 act=   405,771 | engine=161685.9 ms
+  PG-B4-optimizer                          | Hash Join            |   1390.8 ms ±   64.1 | est=   752,697 act=   405,771 | engine=742.8 ms
+
+── C. Forced order (3 tables) ──
+  PG-C1-natural-optimized                  | Hash Join            |   1497.0 ms ±  129.7 | est=   752,697 act=   405,771 | engine=790.5 ms
+  PG-C2-natural-forced                     | Hash Join            |   1566.1 ms ±   97.1 | est=   752,697 act=   405,771 | engine=821.8 ms
+  PG-C3-reversed-forced                    | Hash Join            |   1658.5 ms ±   99.9 | est=   752,697 act=   405,771 | engine=1099.6 ms
+
+── D. Forced order (4 tables) ──
+  PG-D1-natural-optimized                  | Hash Join            |   3208.3 ms ±  457.1 | est= 1,875,233 act= 1,098,213 | engine=972.2 ms
+  PG-D2-natural-forced                     | Hash Join            |   2509.3 ms ±  388.8 | est= 1,875,233 act= 1,098,213 | engine=846.8 ms
+  PG-D3-reversed-forced                    | Hash Join            |   3550.0 ms ±  538.9 | est= 1,836,074 act= 1,098,213 | engine=1225.9 ms
+
+Results saved to /nfs/home/lucas_piovani/NLST-DataLake/experiments/results/pg_experiment_results.json
+Plans saved to /nfs/home/lucas_piovani/NLST-DataLake/experiments/plans_pg/
+
+✓ Done!

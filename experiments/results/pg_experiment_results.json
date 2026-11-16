@@ -1,0 +1,232 @@
+[
+  {
+    "label": "PG-A1-hash",
+    "algorithm": "Hash Join",
+    "mean_ms": 1508.26,
+    "std_ms": 141.05,
+    "min_ms": 1265.17,
+    "estimated_rows": 769287,
+    "actual_rows": 412269,
+    "engine_ms": 773.49,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=off",
+      "SET enable_nestloop=off"
+    ]
+  },
+  {
+    "label": "PG-A2-merge",
+    "algorithm": "Merge Join",
+    "mean_ms": 1516.08,
+    "std_ms": 337.46,
+    "min_ms": 1187.59,
+    "estimated_rows": 769287,
+    "actual_rows": 412269,
+    "engine_ms": 1546.36,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=off",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=off"
+    ]
+  },
+  {
+    "label": "PG-A3-nestloop",
+    "algorithm": "Nested Loop",
+    "mean_ms": 1345.15,
+    "std_ms": 126.6,
+    "min_ms": 1179.28,
+    "estimated_rows": 769287,
+    "actual_rows": 412269,
+    "engine_ms": 153102.59,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=off",
+      "SET enable_mergejoin=off",
+      "SET enable_nestloop=on"
+    ]
+  },
+  {
+    "label": "PG-A4-optimizer",
+    "algorithm": "Hash Join",
+    "mean_ms": 1106.99,
+    "std_ms": 186.73,
+    "min_ms": 901.13,
+    "estimated_rows": 769287,
+    "actual_rows": 412269,
+    "engine_ms": 747.3,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on"
+    ]
+  },
+  {
+    "label": "PG-B1-hash",
+    "algorithm": "Hash Join",
+    "mean_ms": 1466.73,
+    "std_ms": 226.34,
+    "min_ms": 1020.92,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 549.99,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=off",
+      "SET enable_nestloop=off"
+    ]
+  },
+  {
+    "label": "PG-B2-merge",
+    "algorithm": "Merge Join",
+    "mean_ms": 1553.31,
+    "std_ms": 127.24,
+    "min_ms": 1404.51,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 1803.28,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=off",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=off"
+    ]
+  },
+  {
+    "label": "PG-B3-nestloop",
+    "algorithm": "Nested Loop",
+    "mean_ms": 1053.71,
+    "std_ms": 245.01,
+    "min_ms": 665.63,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 161685.91,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=off",
+      "SET enable_mergejoin=off",
+      "SET enable_nestloop=on"
+    ]
+  },
+  {
+    "label": "PG-B4-optimizer",
+    "algorithm": "Hash Join",
+    "mean_ms": 1390.82,
+    "std_ms": 64.09,
+    "min_ms": 1318.73,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 742.77,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on"
+    ]
+  },
+  {
+    "label": "PG-C1-natural-optimized",
+    "algorithm": "Hash Join",
+    "mean_ms": 1496.95,
+    "std_ms": 129.67,
+    "min_ms": 1212.98,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 790.55,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=8"
+    ]
+  },
+  {
+    "label": "PG-C2-natural-forced",
+    "algorithm": "Hash Join",
+    "mean_ms": 1566.11,
+    "std_ms": 97.08,
+    "min_ms": 1334.51,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 821.75,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=1"
+    ]
+  },
+  {
+    "label": "PG-C3-reversed-forced",
+    "algorithm": "Hash Join",
+    "mean_ms": 1658.54,
+    "std_ms": 99.87,
+    "min_ms": 1490.76,
+    "estimated_rows": 752697,
+    "actual_rows": 405771,
+    "engine_ms": 1099.6,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=1"
+    ]
+  },
+  {
+    "label": "PG-D1-natural-optimized",
+    "algorithm": "Hash Join",
+    "mean_ms": 3208.26,
+    "std_ms": 457.1,
+    "min_ms": 2439.73,
+    "estimated_rows": 1875233,
+    "actual_rows": 1098213,
+    "engine_ms": 972.18,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=8"
+    ]
+  },
+  {
+    "label": "PG-D2-natural-forced",
+    "algorithm": "Hash Join",
+    "mean_ms": 2509.28,
+    "std_ms": 388.83,
+    "min_ms": 1889.38,
+    "estimated_rows": 1875233,
+    "actual_rows": 1098213,
+    "engine_ms": 846.81,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=1"
+    ]
+  },
+  {
+    "label": "PG-D3-reversed-forced",
+    "algorithm": "Hash Join",
+    "mean_ms": 3550.02,
+    "std_ms": 538.91,
+    "min_ms": 2807.17,
+    "estimated_rows": 1836074,
+    "actual_rows": 1098213,
+    "engine_ms": 1225.95,
+    "settings": [
+      "SET work_mem = '256MB'",
+      "SET enable_hashjoin=on",
+      "SET enable_mergejoin=on",
+      "SET enable_nestloop=on",
+      "SET join_collapse_limit=1"
+    ]
+  }
+]

@@ -10,24 +10,21 @@ dependencies = [
     "polars>=1.0",              # Transformações Bronze → Silver → Gold
     "duckdb>=1.1",              # Motor SQL analítico (EXPLAIN ANALYZE, JOINs)
     "pyarrow>=17.0",            # Backend Parquet (usado por Polars e DuckDB)
-
     # ── Extração de metadados médicos ──
     "pydicom>=2.4",             # Leitura de metadados DICOM
     "openslide-python",         # Leitura de metadados SVS
     "openslide-bin",            # Binários do OpenSlide
-
     # ── Análise e visualização ──
     "matplotlib>=3.10",         # Gráficos para o artigo
     "seaborn>=0.13",            # Visualizações estatísticas
     "plotly>=6.3",              # Gráficos interativos (exploração)
-
     # ── Utilitários ──
     "tqdm>=4.67",               # Barras de progresso
     "Pillow>=11",               # Manipulação de imagens
-
     # ── Notebooks ──
     "jupyterlab>=4.4",
     "notebook>=7.4",
+    "psycopg[binary]>=3.3.9",
 ]
 
 [build-system]

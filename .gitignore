@@ -15,3 +15,6 @@ __pycache__/
 
 # Logs
 ingest_bronze.log
+
+# postgres
+pg.tar.gz
